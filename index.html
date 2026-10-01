@@ -21,14 +21,19 @@
   <!-- ============ HERO ============ -->
   <header class="hero" id="top">
     <nav class="nav" aria-label="Primary">
-      <a href="#about">About</a>
-      <a href="#work">Work</a>
-      <a href="#stack">Stack</a>
-      <a href="#contact">Contact</a>
+      <a class="nav__logo" href="#top" aria-label="Varun Devaraj, back to top">VD<span>.</span></a>
+      <div class="nav__links">
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#stack">Stack</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <span class="nav__status"><i aria-hidden="true"></i>Open to internships</span>
     </nav>
 
-    <h1 class="hero__title">
-      <span>Hi, I'm</span> <span>Varun</span>
+    <h1 class="hero__title" aria-label="Hi, I'm Varun">
+      <span class="hero__line" aria-hidden="true">Hi, I'm</span>
+      <span class="hero__line" aria-hidden="true">Varun</span>
     </h1>
 
     <div class="hero__row">
@@ -38,89 +43,22 @@
       </p>
 
       <!--
-        Avatar. To use your own 3D render instead of the SVG character,
-        set data-avatar-src="assets/avatar.png" (transparent PNG/WebP works best).
+        Orb: a real-time WebGL sphere lit from the pointer (script.js).
+        To show your own 3D render instead, set data-avatar-src="assets/avatar.png"
+        (transparent PNG/WebP works best).
       -->
       <div class="avatar" data-avatar data-avatar-src="">
-        <svg class="avatar__svg" viewBox="0 0 400 400" role="img" aria-label="Illustrated avatar: a glossy purple orb with a mildly unimpressed expression">
-          <defs>
-            <radialGradient id="av-body" cx="36%" cy="28%" r="78%">
-              <stop offset="0" stop-color="#ffc2e4"/>
-              <stop offset=".28" stop-color="#e05bff"/>
-              <stop offset=".62" stop-color="#6a35e8"/>
-              <stop offset="1" stop-color="#140838"/>
-            </radialGradient>
-            <radialGradient id="av-rim" cx="78%" cy="86%" r="55%">
-              <stop offset="0" stop-color="#ff9a3c" stop-opacity=".85"/>
-              <stop offset=".55" stop-color="#ff4f9a" stop-opacity=".25"/>
-              <stop offset="1" stop-color="#ff4f9a" stop-opacity="0"/>
-            </radialGradient>
-            <radialGradient id="av-eye" cx="42%" cy="38%" r="70%">
-              <stop offset="0" stop-color="#ffffff"/>
-              <stop offset="1" stop-color="#d8d2ea"/>
-            </radialGradient>
-            <radialGradient id="av-shadow" cx="50%" cy="50%" r="50%">
-              <stop offset="0" stop-color="#000" stop-opacity=".7"/>
-              <stop offset="1" stop-color="#000" stop-opacity="0"/>
-            </radialGradient>
-            <filter id="av-blur" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="9"/>
-            </filter>
-            <clipPath id="av-clip-head"><circle cx="200" cy="200" r="156"/></clipPath>
-            <clipPath id="av-clip-l"><circle cx="150" cy="198" r="40"/></clipPath>
-            <clipPath id="av-clip-r"><circle cx="252" cy="198" r="40"/></clipPath>
-          </defs>
-
-          <ellipse cx="200" cy="372" rx="120" ry="16" fill="url(#av-shadow)"/>
-
-          <g class="avatar__head">
-            <circle cx="200" cy="200" r="158" fill="url(#av-body)"/>
-            <circle cx="200" cy="200" r="158" fill="url(#av-rim)"/>
-            <!-- specular highlight: script.js moves it toward the pointer, like a light source -->
-            <g clip-path="url(#av-clip-head)">
-              <g data-gloss>
-                <ellipse cx="138" cy="108" rx="58" ry="26" transform="rotate(-32 138 108)" fill="#fff" opacity=".42" filter="url(#av-blur)"/>
-                <ellipse cx="124" cy="104" rx="16" ry="7" transform="rotate(-32 124 104)" fill="#fff" opacity=".7"/>
-              </g>
-            </g>
-
-            <!-- cheeks -->
-            <ellipse cx="112" cy="262" rx="26" ry="13" fill="#ff7ab8" opacity=".45" filter="url(#av-blur)"/>
-            <ellipse cx="292" cy="262" rx="26" ry="13" fill="#ff7ab8" opacity=".45" filter="url(#av-blur)"/>
-
-            <!-- eyes -->
-            <g class="eye" data-eye>
-              <circle cx="150" cy="198" r="40" fill="url(#av-eye)"/>
-              <g clip-path="url(#av-clip-l)">
-                <g class="eye__pupil" data-pupil>
-                  <circle cx="150" cy="202" r="19" fill="#120a24"/>
-                  <circle cx="143" cy="195" r="6" fill="#fff"/>
-                </g>
-                <rect class="eye__lid" x="108" y="156" width="84" height="34" fill="#4b24b8"/>
-              </g>
-            </g>
-            <g class="eye" data-eye>
-              <circle cx="252" cy="198" r="40" fill="url(#av-eye)"/>
-              <g clip-path="url(#av-clip-r)">
-                <g class="eye__pupil" data-pupil>
-                  <circle cx="252" cy="202" r="19" fill="#120a24"/>
-                  <circle cx="245" cy="195" r="6" fill="#fff"/>
-                </g>
-                <rect class="eye__lid" x="210" y="156" width="84" height="30" fill="#4b24b8"/>
-              </g>
-            </g>
-
-            <!-- brows: one flat, one raised -->
-            <path d="M114 150 Q150 140 186 150" stroke="#12081f" stroke-width="15" stroke-linecap="round" fill="none"/>
-            <path d="M218 132 Q256 116 290 134" stroke="#12081f" stroke-width="15" stroke-linecap="round" fill="none"/>
-
-            <!-- mouth -->
-            <path d="M176 292 Q204 286 232 296" stroke="#12081f" stroke-width="8" stroke-linecap="round" fill="none"/>
-          </g>
-        </svg>
+        <canvas class="orb" aria-hidden="true"></canvas>
+        <div class="orb-fallback" aria-hidden="true"></div>
       </div>
 
       <a class="pill" href="#contact">Contact me</a>
+    </div>
+
+    <div class="hero__foot" aria-hidden="true">
+      <span>AIML &middot; RV University</span>
+      <span class="scroll-cue">Scroll <i></i></span>
+      <span>Portfolio &copy; 2026</span>
     </div>
   </header>
 
@@ -366,6 +304,7 @@
   </footer>
 
   <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="orb.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>

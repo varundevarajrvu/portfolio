@@ -20,7 +20,7 @@
   }
   const scrollToY = (y) => (lenis ? lenis.scrollTo(y, { duration: 1.4 }) : window.scrollTo({ top: y, behavior: 'smooth' }));
 
-  // ---- Avatar: optional image swap ----
+  // ---- Hero orb (WebGL), or a custom image if one is configured ----
   const avatar = document.querySelector('[data-avatar]');
   const customSrc = avatar && avatar.dataset.avatarSrc;
   if (customSrc) {
@@ -29,78 +29,46 @@
     img.alt = 'Portrait of Varun';
     img.src = customSrc;
     img.onload = () => avatar.replaceChildren(img);
+  } else if (avatar) {
+    const canvas = avatar.querySelector('canvas.orb');
+    const orb = window.initOrb ? window.initOrb(canvas, { reduceMotion }) : null;
+    if (!orb) {
+      avatar.classList.add('no-webgl');
+    } else if (finePointer) {
+      // the pointer is the light source
+      let aimFrame = 0;
+      window.addEventListener('pointermove', () => {
+        if (!aimFrame) aimFrame = requestAnimationFrame(() => { aimFrame = 0; orb.aim(pointer.x, pointer.y); });
+      }, { passive: true });
+    } else if (!reduceMotion) {
+      // touch devices: let the light orbit slowly on its own
+      let a = 0;
+      setInterval(() => {
+        a += 0.02;
+        const r = canvas.getBoundingClientRect();
+        orb.aim(r.left + r.width / 2 + Math.cos(a) * r.width * 0.8, r.top + r.height / 2 + Math.sin(a * 0.7) * r.height * 0.6);
+      }, 50);
+    }
   }
 
-  // ---- Avatar: eyes follow the pointer, head tilts, and it is lit from the pointer ----
-  const svg = avatar && avatar.querySelector('.avatar__svg');
-  if (svg) {
-    const pupils = [...svg.querySelectorAll('[data-pupil]')];
-    const bodyLight = svg.querySelector('#av-body');
-    const rimLight = svg.querySelector('#av-rim');
-    const gloss = [...svg.querySelectorAll('[data-gloss]')];
-    const MAX_PUPIL = 14; // SVG units
-    const MAX_TILT = 10; // degrees
-    let lx = -0.55;
-    let ly = -0.75;
-    let lastX = NaN;
-    let lastY = NaN;
-
-    const look = (x, y) => {
-      const rect = svg.getBoundingClientRect();
-      if (!rect.width || rect.bottom < 0) return;
-      const scale = 400 / rect.width;
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-
-      pupils.forEach((pupil) => {
-        const eye = pupil.closest('[data-eye]').querySelector('circle');
-        const dx = x - (rect.left + eye.cx.baseVal.value / scale);
-        const dy = y - (rect.top + eye.cy.baseVal.value / scale);
-        const dist = Math.hypot(dx, dy) || 1;
-        const reach = Math.min(MAX_PUPIL, (dist * scale) / 12);
-        pupil.style.transform = `translate(${(dx / dist) * reach}px, ${(dy / dist) * reach}px)`;
+  // ---- Intro: headline letters rise, then the rest settles in ----
+  const heroTitle = document.querySelector('.hero__title');
+  if (heroTitle && !reduceMotion) {
+    let i = 0;
+    heroTitle.querySelectorAll('.hero__line').forEach((line) => {
+      const text = line.textContent;
+      line.textContent = '';
+      line.classList.add('is-split');
+      [...text].forEach((ch) => {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = ch === ' ' ? '\u00a0' : ch;
+        span.style.setProperty('--i', i++);
+        line.appendChild(span);
       });
-
-      // direction from the head to the pointer, -1..1
-      const nx = clamp((x - cx) / (window.innerWidth / 2), -1, 1);
-      const ny = clamp((y - cy) / (window.innerHeight / 2), -1, 1);
-      if (!reduceMotion) {
-        svg.style.setProperty('--tilt-y', `${nx * MAX_TILT}deg`);
-        svg.style.setProperty('--tilt-x', `${-ny * MAX_TILT}deg`);
-      }
-
-      // the light source sits where the pointer is: move the key light and the
-      // specular highlight toward it, and push the warm rim light to the far side
-      lx = lerp(lx, nx, 0.12);
-      ly = lerp(ly, ny, 0.12);
-      bodyLight.setAttribute('cx', `${(50 + lx * 26).toFixed(2)}%`);
-      bodyLight.setAttribute('cy', `${(48 + ly * 26).toFixed(2)}%`);
-      rimLight.setAttribute('cx', `${(50 - lx * 34).toFixed(2)}%`);
-      rimLight.setAttribute('cy', `${(56 - ly * 34).toFixed(2)}%`);
-      gloss.forEach((g) => g.setAttribute('transform', `translate(${(62 + lx * 95).toFixed(1)} ${(92 + ly * 95).toFixed(1)})`));
-      return Math.abs(nx - lx) + Math.abs(ny - ly) > 0.004;
-    };
-
-    let wander = 0;
-    let easing = false;
-    const tick = () => {
-      if (pointer.seen) {
-        // only repaint the avatar while the pointer moves or the light is still easing
-        if (easing || pointer.x !== lastX || pointer.y !== lastY) {
-          lastX = pointer.x;
-          lastY = pointer.y;
-          easing = look(pointer.x, pointer.y);
-        }
-      } else if (!finePointer && !reduceMotion) {
-        // touch devices have no hover: let the eyes and the light drift on their own
-        wander += 0.006;
-        const r = svg.getBoundingClientRect();
-        look(r.left + r.width / 2 + Math.cos(wander * 3) * r.width, r.top + r.height / 2 + Math.sin(wander * 2) * r.height * 0.7);
-      }
-      requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
+    });
   }
+  requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.add('is-loaded')));
 
   // ---- Custom cursor: a trailing dot that inverts what it passes over ----
   if (finePointer && !reduceMotion) {
