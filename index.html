@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Varun Devaraj — Portfolio</title>
+  <meta name="description" content="Varun Devaraj — AIML student at RV University building local-first AI tools: offline voice assistants, on-device dictation, privacy-preserving browser agents and more.">
+  <meta name="theme-color" content="#050505">
+  <meta property="og:title" content="Varun Devaraj — Portfolio">
+  <meta property="og:description" content="Local-first AI, from the browser to the bare metal.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%236d4dff'/%3E%3Cstop offset='.5' stop-color='%23ff4f9a'/%3E%3Cstop offset='1' stop-color='%23ff9a3c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g)'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero" id="top">
+    <nav class="nav" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#stack">Stack</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <h1 class="hero__title">
+      <span>Hi, I'm</span> <span>Varun</span>
+    </h1>
+
+    <div class="hero__row">
+      <p class="hero__tagline">
+        An AIML student building local-first AI tools &mdash; voice, vision &amp; language models that run on your machine
+        <span class="spark" aria-hidden="true">✦</span>
+      </p>
+
+      <!--
+        Avatar. To use your own 3D render instead of the SVG character,
+        set data-avatar-src="assets/avatar.png" (transparent PNG/WebP works best).
+      -->
+      <div class="avatar" data-avatar data-avatar-src="">
+        <svg class="avatar__svg" viewBox="0 0 400 400" role="img" aria-label="Illustrated avatar: a glossy purple orb with a mildly unimpressed expression">
+          <defs>
+            <radialGradient id="av-body" cx="36%" cy="28%" r="78%">
+              <stop offset="0" stop-color="#ffc2e4"/>
+              <stop offset=".28" stop-color="#e05bff"/>
+              <stop offset=".62" stop-color="#6a35e8"/>
+              <stop offset="1" stop-color="#140838"/>
+            </radialGradient>
+            <radialGradient id="av-rim" cx="78%" cy="86%" r="55%">
+              <stop offset="0" stop-color="#ff9a3c" stop-opacity=".85"/>
+              <stop offset=".55" stop-color="#ff4f9a" stop-opacity=".25"/>
+              <stop offset="1" stop-color="#ff4f9a" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="av-eye" cx="42%" cy="38%" r="70%">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset="1" stop-color="#d8d2ea"/>
+            </radialGradient>
+            <radialGradient id="av-shadow" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stop-color="#000" stop-opacity=".7"/>
+              <stop offset="1" stop-color="#000" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="av-blur" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="9"/>
+            </filter>
+            <clipPath id="av-clip-l"><circle cx="150" cy="198" r="40"/></clipPath>
+            <clipPath id="av-clip-r"><circle cx="252" cy="198" r="40"/></clipPath>
+          </defs>
+
+          <ellipse cx="200" cy="372" rx="120" ry="16" fill="url(#av-shadow)"/>
+
+          <g class="avatar__head">
+            <circle cx="200" cy="200" r="158" fill="url(#av-body)"/>
+            <circle cx="200" cy="200" r="158" fill="url(#av-rim)"/>
+            <ellipse cx="138" cy="108" rx="58" ry="26" transform="rotate(-32 138 108)" fill="#fff" opacity=".42" filter="url(#av-blur)"/>
+            <ellipse cx="124" cy="104" rx="16" ry="7" transform="rotate(-32 124 104)" fill="#fff" opacity=".7"/>
+
+            <!-- cheeks -->
+            <ellipse cx="112" cy="262" rx="26" ry="13" fill="#ff7ab8" opacity=".45" filter="url(#av-blur)"/>
+            <ellipse cx="292" cy="262" rx="26" ry="13" fill="#ff7ab8" opacity=".45" filter="url(#av-blur)"/>
+
+            <!-- eyes -->
+            <g class="eye" data-eye>
+              <circle cx="150" cy="198" r="40" fill="url(#av-eye)"/>
+              <g clip-path="url(#av-clip-l)">
+                <g class="eye__pupil" data-pupil>
+                  <circle cx="150" cy="202" r="19" fill="#120a24"/>
+                  <circle cx="143" cy="195" r="6" fill="#fff"/>
+                </g>
+                <rect class="eye__lid" x="108" y="156" width="84" height="34" fill="#4b24b8"/>
+              </g>
+            </g>
+            <g class="eye" data-eye>
+              <circle cx="252" cy="198" r="40" fill="url(#av-eye)"/>
+              <g clip-path="url(#av-clip-r)">
+                <g class="eye__pupil" data-pupil>
+                  <circle cx="252" cy="202" r="19" fill="#120a24"/>
+                  <circle cx="245" cy="195" r="6" fill="#fff"/>
+                </g>
+                <rect class="eye__lid" x="210" y="156" width="84" height="30" fill="#4b24b8"/>
+              </g>
+            </g>
+
+            <!-- brows: one flat, one raised -->
+            <path d="M114 150 Q150 140 186 150" stroke="#12081f" stroke-width="15" stroke-linecap="round" fill="none"/>
+            <path d="M218 132 Q256 116 290 134" stroke="#12081f" stroke-width="15" stroke-linecap="round" fill="none"/>
+
+            <!-- mouth -->
+            <path d="M176 292 Q204 286 232 296" stroke="#12081f" stroke-width="8" stroke-linecap="round" fill="none"/>
+          </g>
+        </svg>
+      </div>
+
+      <a class="pill" href="#contact">Contact me</a>
+    </div>
+  </header>
+
+  <!-- ============ MARQUEE ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <span>On-device ML</span><i>✦</i><span>Rust</span><i>✦</i><span>Speech &amp; voice</span><i>✦</i><span>Computer vision</span><i>✦</i><span>Privacy by design</span><i>✦</i><span>React</span><i>✦</i><span>Python</span><i>✦</i><span>Embedded</span><i>✦</i>
+      <span>On-device ML</span><i>✦</i><span>Rust</span><i>✦</i><span>Speech &amp; voice</span><i>✦</i><span>Computer vision</span><i>✦</i><span>Privacy by design</span><i>✦</i><span>React</span><i>✦</i><span>Python</span><i>✦</i><span>Embedded</span><i>✦</i>
+    </div>
+  </div>
+
+  <main>
+    <!-- ============ ABOUT ============ -->
+    <section class="section about" id="about">
+      <p class="eyebrow">01 / About</p>
+      <h2 class="statement" data-reveal>
+        I build AI that runs on <em class="grad">your machine.</em>
+      </h2>
+      <div class="about__grid">
+        <div class="about__copy" data-reveal>
+          <p>
+            I'm Varun, a second-year AIML student at RV University. Most of what I build keeps the model on the device:
+            a voice assistant with no cloud in the loop, a dictation app that makes zero network requests,
+            and a browser agent that literally cannot see your passwords.
+          </p>
+          <p>
+            When a project needs hardware, I wire that up too &mdash; ESP32 cameras, Pico-driven lights.
+            When I want to understand something properly, I build it from scratch, like a GPT trained on a laptop CPU.
+          </p>
+        </div>
+        <dl class="facts" data-reveal>
+          <div><dt>Studying</dt><dd>CSE (AIML), RV University</dd></div>
+          <div><dt>Year</dt><dd>2nd</dd></div>
+          <div><dt>Currently</dt><dd>SIH 2026 &middot; Team Dhristi (PS&nbsp;26171)</dd></div>
+          <div><dt>Focus</dt><dd>Local-first AI, speech, vision</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ============ WORK ============ -->
+    <section class="section work" id="work">
+      <div class="work__head">
+        <p class="eyebrow">02 / Selected work</p>
+        <h2 class="mega" data-reveal>Work<sup>09</sup></h2>
+      </div>
+
+      <ol class="projects">
+        <li class="project" data-reveal>
+          <span class="project__index">01</span>
+          <div class="project__name">
+            <p class="project__kicker">Desktop AI &middot; Windows</p>
+            <h3 class="project__title">Nyxa</h3>
+            <p class="project__proof">150–350 ms local speech-to-text</p>
+          </div>
+          <div class="project__body">
+            <p>A voice assistant that runs entirely on your laptop. Wake word, speech recognition, intent parsing and execution are all local. A grammar resolves most commands instantly; misses fall back to a local LLM. Every action carries a permission tier that comes from the registry, never from the model. Hand-gesture control included.</p>
+            <ul class="chips"><li>Rust</li><li>Tauri v2</li><li>sherpa-onnx</li><li>Ollama</li><li>MediaPipe</li></ul>
+            <p class="project__links">
+              <a href="https://github.com/varundevarajrvu/nyxa" target="_blank" rel="noopener">GitHub ↗</a>
+              <a href="https://varundevarajrvu.github.io/nyxa/" target="_blank" rel="noopener">Site ↗</a>
+            </p>
+          </div>
+        </li>
+
+        <li class="project" data-reveal>
+          <span class="project__index">02</span>
+          <div class="project__name">
+            <p class="project__kicker">Desktop AI &middot; Windows</p>
+            <h3 class="project__title">Skryver</h3>
+            <p class="project__proof">0 network requests</p>
+          </div>
+          <div class="project__body">
+            <p>Private, fully offline voice dictation. Hold a hotkey, speak, and cleaned-up text is typed into whatever app you're in. Speech recognition (Parakeet / Moonshine) and grammar cleanup (Qwen2.5-1.5B on llama.cpp) both run on your CPU. Ships as a tray app with a personal dictionary.</p>
+            <ul class="chips"><li>Rust</li><li>Tauri</li><li>sherpa-onnx</li><li>llama.cpp</li></ul>
+            <p class="project__links">
+              <a href="https://github.com/varundevarajrvu/skryver" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
+          </div>
+        </li>
+
+        <li class="project" data-reveal>
+          <span class="project__index">03</span>
+          <div class="project__name">
+            <p class="project__kicker">Browser security &middot; SIH 2026</p>
+            <h3 class="project__title">Dhristi</h3>
+            <p class="project__proof">3 independent fail-safe layers</p>
+          </div>
+          <div class="project__body">
+            <p>A Chrome extension that lets a browser agent see the page without ever seeing your PII. Object detection runs on-device via WebGPU; sensitive fields are blacked out of the screenshot and stripped from the DOM before anything leaves the client, an egress assertion re-checks every request, and an action guard refuses writes to sensitive fields. Built with a six-person RVU team for ISRO's problem statement 26171.</p>
+            <ul class="chips"><li>Chrome MV3</li><li>WebGPU</li><li>Transformers.js</li><li>FastAPI</li><li>Python</li></ul>
+            <p class="project__links">
+              <a href="https://github.com/varundevarajrvu/sih" target="_blank" rel="noopener">GitHub ↗</a>
+              <a href="https://francisreubenr-rvu.github.io/sih-2026/" target="_blank" rel="noopener">Team site ↗</a>
+            </p>
+          </div>
+        </li>
+
+        <li class="project" data-reveal>
+          <span class="project__index">04</span>
+          <div class="project__name">
+            <p class="project__kicker">IoT + ML</p>
+            <h3 class="project__title">MoodSync</h3>
+            <p class="project__proof">Camera &rarr; mood &rarr; light + music</p>
+          </div>
+          <div class="project__body">
+            <p>A camera reads your expression, a Python "brain" classifies it into one of five moods with the FER+ model, and the room responds: a Pico-driven RGB lamp shifts colour, a matching song plays, and a live dashboard mirrors it all. The policy is <em>regulate, not mirror</em> &mdash; a stressed reading pulls the room toward calm.</p>
+            <ul class="chips"><li>Python</li><li>OpenCV</li><li>ONNX Runtime</li><li>ESP32-CAM</li><li>Raspberry Pi Pico</li><li>React</li></ul>
+            <p class="project__links">
+              <a href="https://github.com/varundevarajrvu/moodsync" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
+          </div>
+        </li>
+
+        <li class="project" data-reveal>
+          <span class="project__index">05</span>
+          <div class="project__name">
+            <p class="project__kicker">ML from scratch</p>
+            <h3 class="project__title">tiny-gpt</h3>
+            <p class="project__proof">~1.07M params &middot; ~1 h on a laptop CPU</p>
+          </div>
+          <div class="project__body">
+            <p>A GPT-style language model written from scratch and trained without a GPU: a byte-level BPE tokenizer, a 4-layer decoder-only transformer, a resumable training loop and a CLI chat. Trained on the complete Sherlock Holmes canon, it nails Victorian style and fails on sense &mdash; exactly the expected result at this scale, documented honestly.</p>
+            <ul class="chips"><li>Python</li><li>PyTorch</li><li>BPE</li><li>Transformers</li></ul>
+            <p class="project__links">
+              <a href="https://github.com/varundevarajrvu/tiny-gpt" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
+          </div>
+        </li>
+
+        <li class="project" data-reveal>
+          <span class="project__index">06</span>
+          <div class="project__name">
+            <p class="project__kicker">EdTech platform</p>
+            <h3 class="project__title">Coder's Zone</h3>
+            <p class="project__proof">4 languages, real compilers</p>
+          </div>
+          <div class="project__body">
+            <p>An attempt-first coding practice platform. Solve in C, C++, Java or Python, get judged against real tests on a real compiler, and only then unlock the worked solution with a line-by-line explanation generated by Claude. Problems are pure data; magic-link accounts via Supabase.</p>
+            <ul class="chips"><li>Next.js 16</li><li>React 19</li><li>Supabase</li><li>Claude API</li></ul>
+            <p class="project__links">
+              <a href="https://github.com/varundevarajrvu/coders-zone" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
+          </div>
+        </li>
+
+        <li class="project" data-reveal>
+          <span class="project__index">07</span>
+          <div class="project__name">
+            <p class="project__kicker">Web app</p>
+            <h3 class="project__title">Chill / Focus</h3>
+            <p class="project__proof">Drift-free timer &middot; 3 focus levels</p>
+          </div>
+          <div class="project__body">
+            <p>A two-mode study companion. Focus mode is a levelled pomodoro with ambient sound (including brown noise synthesised live with the Web Audio API) and a notes panel; Chill mode has music and mini-games. Each mode has its own motion language. No backend, no accounts, no tracking.</p>
+            <ul class="chips"><li>React 19</li><li>TypeScript</li><li>Tailwind v4</li><li>Zustand</li><li>Framer Motion</li></ul>
+            <p class="project__links">
+              <a href="https://github.com/varundevarajrvu/chill-focus" target="_blank" rel="noopener">GitHub ↗</a>
+              <a href="https://chill-focus.vercel.app" target="_blank" rel="noopener">Live ↗</a>
+            </p>
+          </div>
+        </li>
+
+        <li class="project" data-reveal>
+          <span class="project__index">08</span>
+          <div class="project__name">
+            <p class="project__kicker">Full-stack</p>
+            <h3 class="project__title">Star Ride</h3>
+            <p class="project__proof">Deployed on Render + Aiven</p>
+          </div>
+          <div class="project__body">
+            <p>A bike-rental site with bcrypt-hashed auth, bookings with transaction records, profiles with booking history, password reset flows and an admin dashboard. The server creates its own schema and seed data on first boot, so it deploys with a single environment variable.</p>
+            <ul class="chips"><li>Node.js</li><li>Express</li><li>MySQL</li><li>bcrypt</li></ul>
+            <p class="project__links">
+              <a href="https://github.com/varundevarajrvu/star-ride" target="_blank" rel="noopener">GitHub ↗</a>
+              <a href="https://star-ride-cidx.onrender.com" target="_blank" rel="noopener">Live ↗</a>
+            </p>
+          </div>
+        </li>
+
+        <li class="project" data-reveal>
+          <span class="project__index">09</span>
+          <div class="project__name">
+            <p class="project__kicker">Frontend</p>
+            <h3 class="project__title">GAZU</h3>
+            <p class="project__proof">0 dependencies &middot; AA contrast</p>
+          </div>
+          <div class="project__body">
+            <p>An editorial storefront for a fictional fashion brand in plain HTML, CSS and ~60 lines of JS. Mobile is recomposed rather than scaled, and every departure from the design brief &mdash; like darkening muted text to clear WCAG AA &mdash; is measured and written down.</p>
+            <ul class="chips"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+            <p class="project__links">
+              <a href="https://github.com/varundevarajrvu/gazu" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============ STACK ============ -->
+    <section class="section stack" id="stack">
+      <p class="eyebrow">03 / Stack</p>
+      <h2 class="mega" data-reveal>Toolbox</h2>
+      <div class="stack__grid">
+        <div class="stack__group" data-reveal>
+          <h3>Languages</h3>
+          <ul><li>Rust</li><li>Python</li><li>TypeScript</li><li>JavaScript</li><li>C++</li><li>SQL</li></ul>
+        </div>
+        <div class="stack__group" data-reveal>
+          <h3>ML &amp; AI</h3>
+          <ul><li>PyTorch</li><li>ONNX Runtime</li><li>sherpa-onnx</li><li>llama.cpp</li><li>Ollama</li><li>OpenCV</li><li>MediaPipe</li><li>Transformers.js</li></ul>
+        </div>
+        <div class="stack__group" data-reveal>
+          <h3>Web</h3>
+          <ul><li>React</li><li>Next.js</li><li>Vite</li><li>Tailwind CSS</li><li>Framer Motion</li><li>Node / Express</li><li>FastAPI</li></ul>
+        </div>
+        <div class="stack__group" data-reveal>
+          <h3>Platforms &amp; hardware</h3>
+          <ul><li>Tauri</li><li>Chrome extensions</li><li>Supabase</li><li>MySQL</li><li>ESP32-CAM</li><li>Raspberry Pi Pico</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="section contact" id="contact">
+      <p class="eyebrow">04 / Contact</p>
+      <h2 class="contact__title" data-reveal>Got something <em class="grad">to build?</em></h2>
+      <p class="contact__copy" data-reveal>Open to internships, collaborations and hackathon teams. The fastest way to reach me is below.</p>
+      <div class="contact__links" data-reveal>
+        <a class="pill pill--lg" href="https://github.com/varundevarajrvu" target="_blank" rel="noopener">GitHub ↗</a>
+        <!-- Add more links here, e.g.:
+        <a class="pill pill--lg pill--ghost" href="mailto:you@example.com">Email ↗</a>
+        <a class="pill pill--lg pill--ghost" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn ↗</a>
+        -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Varun Devaraj</span>
+    <span>Hand-built &middot; no framework</span>
+    <a href="#top">Back to top ↑</a>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
