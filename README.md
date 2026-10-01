@@ -26,7 +26,16 @@ The site is served at `https://varundevarajrvu.github.io/portfolio/`. `.nojekyll
 - **Contact links** — the contact section ships with GitHub only. Uncomment and fill the Email / LinkedIn lines in `index.html` (search for `Add more links here`).
 - **Avatar** — the hero uses a hand-built SVG character whose eyes follow the cursor. To use your own 3D render instead, set `data-avatar-src="assets/avatar.png"` on the `.avatar` element (a transparent PNG/WebP around 1000×1000 works best).
 - **Projects** — each project is one `<li class="project">` in the Work section. Copy one, edit it, and update the count in `Work<sup>09</sup>`.
+  - With a screenshot: add `data-bg="assets/work/name.webp"` (1600px wide) plus a heavily blurred `assets/work/name-amb.webp` for the ambient background, e.g.
+    `ffmpeg -i name.webp -vf "scale=480:-2,gblur=sigma=22,eq=saturation=1.35" name-amb.webp`.
+  - Without one: add `data-art` and a `<p class="project__art" aria-hidden="true">…</p>` whose text becomes the ghosted background.
 - **Colours** — the gradient and palette live in the `:root` tokens at the top of `styles.css`.
+
+## Motion
+
+- **Work showcase** — the project list becomes a pinned, full-screen slideshow driven by scroll. Moving forward, the outgoing headline zooms through the camera while the next slide pulls into focus from a blur; scrolling back plays the reverse.
+- **Hero** — the headline zooms through and the avatar defocuses as you scroll away.
+- **Reveals** — sections pull into focus as they enter the viewport.
 
 ## Accessibility & motion
 
