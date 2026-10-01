@@ -35,7 +35,8 @@ The site is served at `https://varundevarajrvu.github.io/portfolio/`. `.nojekyll
 ## Motion
 
 - **Work showcase** — the project list becomes a pinned, full-screen slideshow driven by scroll. Moving forward, the outgoing headline zooms through the camera while the next slide pulls into focus from a blur; scrolling back plays the reverse.
-- **Intro** — the terminal types `whoami` (your name as block letters), `ls projects/` and `cat now.txt`; click or press any key to skip.
+- **Intro** — the terminal types `whoami`, `ls projects/` and `cat now.txt`; click or press any key to skip.
+- **LED name** — `whoami` prints the name on a canvas LED board built from the block letters in `index.html`: the LEDs flicker on in a sweep, a light band shimmers across, LEDs swell near the cursor, and a brief RGB glitch fires every few seconds (or on click). Static under reduced motion; the plain block letters remain for no-JS.
 - **Hero** — the terminal recedes as you scroll away.
 - **Reveals** — sections pull into focus as they enter the viewport.
 - **Smooth scroll** — inertial scrolling via [Lenis](https://github.com/darkroomengineering/lenis) (MIT, vendored in `assets/vendor/`).

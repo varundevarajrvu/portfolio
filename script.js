@@ -27,6 +27,166 @@
   };
   const goToProject = (i) => projectNav(i);
 
+  // ---- The name as a live LED board (replaces the plain block-letter <pre>) ----
+  const bannerPre = document.querySelector('pre.term__banner');
+  if (bannerPre) initLed(bannerPre);
+
+  function initLed(pre) {
+    // read the bitmap from the block letters: each character cell becomes two stacked LEDs
+    const lines = pre.textContent.split('\n');
+    const cols = Math.max(...lines.map((l) => l.length));
+    const rows = lines.length * 2;
+    const cells = [];
+    lines.forEach((line, r) => {
+      [...line].forEach((ch, c) => {
+        if (ch === '█') cells.push({ c, r: r * 2 }, { c, r: r * 2 + 1 });
+      });
+    });
+    cells.forEach((cell) => { cell.delay = (cell.c / cols) * 650 + Math.random() * 260; });
+
+    const wrap = document.createElement('div');
+    wrap.className = 'term__banner term__led';
+    wrap.setAttribute('aria-hidden', 'true');
+    wrap.title = 'click me';
+    const canvas = document.createElement('canvas');
+    wrap.appendChild(canvas);
+    pre.replaceWith(wrap);
+    const ctx = canvas.getContext('2d');
+
+    const PAD = 1; // spare cells around the board for glow and glitch offsets
+    const stops = [[126, 231, 135], [62, 219, 196], [92, 200, 255]]; // green -> teal -> sky
+    const colorAt = (t) => {
+      const seg = t < 0.5 ? 0 : 1;
+      const k = t < 0.5 ? t / 0.5 : (t - 0.5) / 0.5;
+      return stops[seg].map((v, i) => Math.round(v + (stops[seg + 1][i] - v) * k));
+    };
+
+    let size = 0;
+    let dpr = 1;
+    const fit = () => {
+      const avail = wrap.clientWidth || wrap.parentElement.clientWidth;
+      const cssW = Math.min(avail, 860, (window.innerHeight * 0.2 * (cols + PAD * 2)) / (rows + PAD * 2));
+      size = cssW / (cols + PAD * 2);
+      const cssH = size * (rows + PAD * 2);
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.style.width = `${cssW}px`;
+      canvas.style.height = `${cssH}px`;
+      canvas.width = Math.round(cssW * dpr);
+      canvas.height = Math.round(cssH * dpr);
+    };
+
+    const local = { x: -1e4, y: -1e4 };
+    let bootAt = -1;
+    let glitchUntil = 0;
+    let nextGlitch = performance.now() + 5000;
+    let glitchRows = [];
+    let visible = true;
+    let running = false;
+
+    const triggerGlitch = (now, ms = 170) => {
+      glitchUntil = now + ms;
+      const start = Math.floor(Math.random() * (rows - 3));
+      const span = 2 + Math.floor(Math.random() * 3);
+      const shift = (Math.random() < 0.5 ? -1 : 1) * (1 + Math.floor(Math.random() * 2));
+      glitchRows = Array.from({ length: span }, (_, i) => [start + i, shift]);
+    };
+
+    const dot = (x, y, rad, rgb, alpha) => {
+      ctx.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
+      ctx.beginPath();
+      ctx.arc(x, y, rad, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    const draw = (now) => {
+      const s = size * dpr;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const px = (local.x * dpr) / s - PAD; // pointer in cell units
+      const py = (local.y * dpr) / s - PAD;
+      const glitching = now < glitchUntil;
+      const shiftOf = (r) => (glitching ? (glitchRows.find(([gr]) => gr === r) || [0, 0])[1] : 0);
+      const band = ((now / 3800) % 1.6) * (cols + 20) - 10; // shimmer sweeping left to right
+      const t0 = bootAt < 0 ? -1 : now - bootAt;
+
+      // the panel: unlit LEDs, warming up around the pointer
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const d = Math.hypot(c - px, r - py);
+          const near = Math.exp(-(d * d) / 18);
+          dot((c + PAD + 0.5) * s, (r + PAD + 0.5) * s, s * 0.2, [126, 231, 135], 0.05 + near * 0.18);
+        }
+      }
+      if (t0 < 0) return;
+
+      // a glitch adds red/cyan copies underneath (additive), then the real LEDs on top
+      const passes = glitching
+        ? [[-0.3, [255, 60, 110], 0.5], [0.3, [60, 200, 255], 0.5], [0, null, 1]]
+        : [[0, null, 1]];
+      passes.forEach(([dx, tint, passAlpha]) => {
+        ctx.globalCompositeOperation = tint ? 'lighter' : 'source-over';
+        cells.forEach((cell) => {
+          const age = t0 - cell.delay;
+          if (age < 0) return;
+          // flicker for the first moments after an LED switches on
+          if (age < 140 && Math.random() < 0.45) return;
+          const c = cell.c + shiftOf(cell.r);
+          const d = Math.hypot(cell.c - px, cell.r - py);
+          const near = Math.exp(-(d * d) / 14);
+          const shimmer = Math.exp(-(((cell.c - band) / 4) ** 2));
+          const rgb = tint || colorAt(cell.c / (cols - 1));
+          const bright = Math.min(1, 0.78 + shimmer * 0.3 + near * 0.4);
+          const x = (c + PAD + 0.5 + dx) * s;
+          const y = (cell.r + PAD + 0.5) * s;
+          const rad = s * (0.42 + near * 0.16);
+          if (!tint) dot(x, y, rad * 2.1, rgb, 0.07 * bright + near * 0.06); // glow
+          dot(x, y, rad, rgb, bright * passAlpha);
+          if (!tint) dot(x - rad * 0.28, y - rad * 0.28, rad * 0.32, [255, 255, 255], 0.22 * bright); // specular
+        });
+      });
+      ctx.globalCompositeOperation = 'source-over';
+
+      if (!reduceMotion && now > nextGlitch && t0 > 1500) {
+        triggerGlitch(now);
+        nextGlitch = now + 6000 + Math.random() * 4000;
+      }
+    };
+
+    const loop = (now) => {
+      if (!visible || document.hidden) { running = false; return; }
+      draw(now);
+      requestAnimationFrame(loop);
+    };
+    const run = () => {
+      if (running || reduceMotion) return;
+      running = true;
+      requestAnimationFrame(loop);
+    };
+
+    fit();
+    draw(performance.now());
+    window.addEventListener('resize', () => { fit(); draw(performance.now()); });
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) run(); }).observe(canvas);
+    document.addEventListener('visibilitychange', run);
+
+    if (finePointer && !reduceMotion) {
+      window.addEventListener('pointermove', (e) => {
+        const r = canvas.getBoundingClientRect();
+        local.x = e.clientX - r.left;
+        local.y = e.clientY - r.top;
+      }, { passive: true });
+    }
+    wrap.addEventListener('click', () => triggerGlitch(performance.now(), 260));
+
+    // the terminal tells us when the banner is revealed; boot the LEDs then
+    wrap.addEventListener('term:show', () => {
+      bootAt = reduceMotion ? -1e6 : performance.now();
+      if (reduceMotion) draw(performance.now());
+      run();
+    });
+    // without the typing sequence (reduced motion or no terminal), show it fully lit
+    if (reduceMotion) wrap.dispatchEvent(new Event('term:show'));
+  }
+
   // ---- Hero terminal: replays its own content as a typing sequence, then stays live ----
   const term = document.querySelector('[data-term]');
   if (term) initTerminal(term);
@@ -69,6 +229,7 @@
       for (const el of steps) {
         const cmd = el.classList.contains('term__line') && el.querySelector('.t-cmd');
         el.classList.remove('t-hidden');
+        el.dispatchEvent(new Event('term:show'));
         if (cmd) {
           const text = cmd.textContent;
           cmd.textContent = '';

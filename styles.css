@@ -313,7 +313,7 @@ html:not(.js) .term__hint { opacity: 0; }
   overflow: hidden;
 }
 
-.term.is-typing .term__banner:not(.t-hidden) {
+.term.is-typing .term__banner:not(.t-hidden, .term__led) {
   animation: banner-in 0.5s steps(6) both;
 }
 
@@ -321,6 +321,17 @@ html:not(.js) .term__hint { opacity: 0; }
   from { clip-path: inset(0 0 100% 0); }
   to { clip-path: inset(0 0 0 0); }
 }
+
+/* LED board version of the name (drawn by script.js) */
+.term__led {
+  margin: 0.5em 0 0.6em -0.4em;
+  line-height: 0;
+  text-shadow: none;
+  overflow: visible;
+  cursor: pointer;
+}
+
+.term__led canvas { display: block; max-width: 100%; }
 
 /* block cursor while a command is being typed */
 .term__line.is-active .t-cmd::after {
