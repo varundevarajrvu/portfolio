@@ -5,7 +5,7 @@
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  // Latest pointer position, shared by the cursor, the lighting and the avatar.
+  // Latest pointer position, shared by the cursor and the lighting.
   const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 3, seen: false };
   window.addEventListener('pointermove', (e) => {
     pointer.x = e.clientX;
@@ -20,54 +20,191 @@
   }
   const scrollToY = (y) => (lenis ? lenis.scrollTo(y, { duration: 1.4 }) : window.scrollTo({ top: y, behavior: 'smooth' }));
 
-  // ---- Hero orb (WebGL), or a custom image if one is configured ----
-  const avatar = document.querySelector('[data-avatar]');
-  const customSrc = avatar && avatar.dataset.avatarSrc;
-  if (customSrc) {
-    const img = new Image();
-    img.className = 'avatar__img';
-    img.alt = 'Portrait of Varun';
-    img.src = customSrc;
-    img.onload = () => avatar.replaceChildren(img);
-  } else if (avatar) {
-    const canvas = avatar.querySelector('canvas.orb');
-    const orb = window.initOrb ? window.initOrb(canvas, { reduceMotion }) : null;
-    if (!orb) {
-      avatar.classList.add('no-webgl');
-    } else if (finePointer) {
-      // the pointer is the light source
-      let aimFrame = 0;
-      window.addEventListener('pointermove', () => {
-        if (!aimFrame) aimFrame = requestAnimationFrame(() => { aimFrame = 0; orb.aim(pointer.x, pointer.y); });
-      }, { passive: true });
-    } else if (!reduceMotion) {
-      // touch devices: let the light orbit slowly on its own
-      let a = 0;
-      setInterval(() => {
-        a += 0.02;
-        const r = canvas.getBoundingClientRect();
-        orb.aim(r.left + r.width / 2 + Math.cos(a) * r.width * 0.8, r.top + r.height / 2 + Math.sin(a * 0.7) * r.height * 0.6);
-      }, 50);
-    }
-  }
+  // ---- Jump to a project: the slideshow replaces this with its own version ----
+  let projectNav = (i) => {
+    const item = document.querySelectorAll('.projects > .project')[i];
+    if (item) scrollToY(item.getBoundingClientRect().top + window.scrollY - 40);
+  };
+  const goToProject = (i) => projectNav(i);
 
-  // ---- Intro: headline letters rise, then the rest settles in ----
-  const heroTitle = document.querySelector('.hero__title');
-  if (heroTitle && !reduceMotion) {
-    let i = 0;
-    heroTitle.querySelectorAll('.hero__line').forEach((line) => {
-      const text = line.textContent;
-      line.textContent = '';
-      line.classList.add('is-split');
-      [...text].forEach((ch) => {
-        const span = document.createElement('span');
-        span.className = 'char';
-        span.textContent = ch === ' ' ? '\u00a0' : ch;
-        span.style.setProperty('--i', i++);
-        line.appendChild(span);
-      });
+  // ---- Hero terminal: replays its own content as a typing sequence, then stays live ----
+  const term = document.querySelector('[data-term]');
+  if (term) initTerminal(term);
+
+  function initTerminal(root) {
+    const body = root.querySelector('[data-term-body]');
+    const form = root.querySelector('[data-term-form]');
+    const input = form.querySelector('input');
+    const promptSpans = [...form.children].filter((el) => el.tagName === 'SPAN');
+    const projects = [...body.querySelectorAll('[data-project]')].map((a) => a.textContent.replace(/\/$/, ''));
+    const email = document.querySelector('[data-copy]')?.dataset.copy || '';
+    const github = 'https://github.com/varundevarajrvu';
+
+    body.addEventListener('click', (e) => {
+      const a = e.target.closest('[data-project]');
+      if (!a) return;
+      e.preventDefault();
+      e.stopPropagation(); // keep Lenis' anchor handler from also jumping to #work
+      goToProject(+a.dataset.project);
+    });
+
+    // ---------- intro: type the commands, reveal the output ----------
+    let skipped = false;
+    let done = false;
+    const wait = (ms) => new Promise((r) => setTimeout(r, skipped ? 0 : ms));
+    const steps = [...body.children].filter((el) => el !== form);
+
+    const finish = () => {
+      done = true;
+      root.classList.remove('is-typing');
+      root.classList.add('is-done');
+      form.classList.remove('t-hidden');
+    };
+
+    async function play() {
+      root.classList.add('is-typing');
+      steps.forEach((el) => el.classList.add('t-hidden'));
+      form.classList.add('t-hidden');
+      await wait(450);
+      for (const el of steps) {
+        const cmd = el.classList.contains('term__line') && el.querySelector('.t-cmd');
+        el.classList.remove('t-hidden');
+        if (cmd) {
+          const text = cmd.textContent;
+          cmd.textContent = '';
+          el.classList.add('is-active');
+          await wait(320);
+          for (const ch of text) {
+            if (skipped) break;
+            cmd.textContent += ch;
+            await wait(40 + Math.random() * 60);
+          }
+          cmd.textContent = text;
+          el.classList.remove('is-active');
+          await wait(240);
+        } else {
+          await wait(el.classList.contains('term__banner') ? 520 : 80);
+        }
+      }
+      finish();
+    }
+
+    if (reduceMotion) {
+      finish();
+    } else {
+      const skip = () => { if (!done) skipped = true; };
+      root.addEventListener('click', skip);
+      window.addEventListener('keydown', skip);
+      window.addEventListener('wheel', skip, { passive: true });
+      window.addEventListener('touchmove', skip, { passive: true });
+      play();
+    }
+
+    // after the intro, clicking empty terminal space focuses the prompt
+    root.addEventListener('click', (e) => {
+      if (done && !e.target.closest('a, button, input')) input.focus({ preventScroll: true });
+    });
+
+    // ---------- live prompt ----------
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    };
+    const print = (...parts) => {
+      const p = el('p', 'term__out');
+      p.append(...parts);
+      body.insertBefore(p, form);
+      return p;
+    };
+    const link = (text, href, onClick) => {
+      const a = el('a', null, text);
+      a.href = href;
+      if (href.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener'; }
+      if (onClick) a.addEventListener('click', (e) => { e.stopPropagation(); onClick(e); });
+      return a;
+    };
+    const dim = (t) => el('span', 't-dim', t);
+    const echo = (cmd) => {
+      const line = el('div', 'term__line');
+      promptSpans.forEach((sp) => line.append(sp.cloneNode(true)));
+      line.append(' ', el('span', 't-cmd', cmd));
+      body.insertBefore(line, form);
+    };
+
+    const commands = {
+      help() {
+        [['whoami', 'who I am'], ['ls', 'list projects'], ['open <project>', 'jump to a project'],
+          ['contact', 'how to reach me'], ['github', 'open my GitHub'], ['clear', 'clear the screen']]
+          .forEach(([c, d]) => print(el('span', 't-user t-pad', c), dim(d)));
+      },
+      whoami() {
+        print(el('strong', null, 'Varun Devaraj'), dim(' · '), 'AIML student @ RV University');
+        print('I build AI that runs on your machine — voice, vision & language models. No cloud.').classList.add('t-soft');
+      },
+      ls() {
+        const p = print();
+        p.classList.add('term__ls');
+        projects.forEach((name, i) => p.append(link(`${name}/`, '#work', (e) => { e.preventDefault(); goToProject(i); }), ' '));
+      },
+      open(arg) {
+        const i = projects.indexOf((arg || '').replace(/\/$/, '').toLowerCase());
+        if (i < 0) { print(dim(arg ? `open: no such project: ${arg} (try ls)` : 'usage: open <project>  (try ls)')); return; }
+        print(dim(`opening ${projects[i]}…`));
+        goToProject(i);
+      },
+      contact() {
+        print(el('span', 't-user t-pad', 'email'), link(email, `mailto:${email}`));
+        print(el('span', 't-user t-pad', 'github'), link('github.com/varundevarajrvu', github));
+      },
+      github() {
+        print(dim('opening github.com/varundevarajrvu…'));
+        window.open(github, '_blank', 'noopener');
+      },
+      clear() {
+        [...body.children].forEach((n) => { if (n !== form) n.remove(); });
+      },
+      sudo() {
+        print(dim('nice try. this machine only takes orders from varun.'));
+      },
+    };
+    const aliases = { projects: 'ls', dir: 'ls', cd: 'open', email: 'contact', about: 'whoami', cls: 'clear' };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const raw = input.value.trim();
+      input.value = '';
+      echo(raw);
+      if (raw) {
+        const [name, ...rest] = raw.split(/\s+/);
+        const key = name.toLowerCase();
+        const fn = commands[aliases[key] || key];
+        if (fn) fn(rest.join(' '));
+        else print(dim(`command not found: ${name} — try 'help'`));
+      }
+      body.scrollTop = body.scrollHeight;
     });
   }
+
+  // ---- Copy-to-clipboard buttons ----
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy);
+        btn.textContent = 'Copied ✓';
+      } catch {
+        btn.textContent = 'Press Ctrl+C';
+        const sel = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(btn.previousElementSibling);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1800);
+    });
+  });
+
   requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.add('is-loaded')));
 
   // ---- Custom cursor: a trailing dot that inverts what it passes over ----
@@ -108,7 +245,7 @@
     requestAnimationFrame(follow);
   }
 
-  // ---- Light pools that trail the pointer (hero + work stage) ----
+  // ---- Light pool that trails the pointer across the work stage ----
   const lights = [];
   const addLight = (host) => {
     const el = document.createElement('div');
@@ -144,23 +281,21 @@
     requestAnimationFrame(runLights);
   }
 
-  // ---- Hero: headline zooms through and the avatar recedes as you scroll away ----
+  // ---- Hero: the terminal recedes as you scroll away ----
   const hero = document.querySelector('.hero');
-  if (hero && !reduceMotion) {
-    if (finePointer) addLight(hero);
-    const title = hero.querySelector('.hero__title');
+  if (hero && term && !reduceMotion) {
     let heroFrame = 0;
     const updateHero = () => {
       heroFrame = 0;
       const p = clamp(window.scrollY / (hero.offsetHeight * 0.9), 0, 1);
-      if (title) {
-        title.style.transform = `scale(${1 + p * p * 3.5})`;
-        title.style.opacity = `${1 - p * 1.25}`;
+      if (p === 0) {
+        // at the top, hand control back to the stylesheet (lets the entrance fade play)
+        term.style.transform = '';
+        term.style.opacity = '';
+        return;
       }
-      if (avatar) {
-        avatar.style.transform = `translate3d(0, ${p * -60}px, 0) scale(${1 - p * 0.25})`;
-        avatar.style.opacity = `${1 - p * 1.1}`;
-      }
+      term.style.transform = `translate3d(0, ${(p * -50).toFixed(1)}px, 0) scale(${(1 - p * 0.08).toFixed(4)})`;
+      term.style.opacity = `${(1 - p * 0.9).toFixed(3)}`;
     };
     window.addEventListener('scroll', () => { if (!heroFrame) heroFrame = requestAnimationFrame(updateHero); }, { passive: true });
     updateHero();
@@ -261,6 +396,11 @@
         slides.forEach((s) => s.classList.remove('is-leaving', 'is-animating'));
       }, 2000);
     }
+
+    projectNav = (i) => {
+      const top = root.getBoundingClientRect().top + window.scrollY;
+      scrollToY(top + (clamp(i, 0, n - 1) + 0.5) * segment());
+    };
 
     nextBtn.addEventListener('click', () => {
       if (current >= n - 1) {

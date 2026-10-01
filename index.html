@@ -9,7 +9,7 @@
   <meta property="og:title" content="Varun Devaraj — Portfolio">
   <meta property="og:description" content="Local-first AI, from the browser to the bare metal.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%236d4dff'/%3E%3Cstop offset='.5' stop-color='%23ff4f9a'/%3E%3Cstop offset='1' stop-color='%23ff9a3c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g)'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0d0c'/%3E%3Cpath d='M16 20l14 12-14 12' stroke='%237ee787' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M34 46h16' stroke='%237ee787' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
   <!-- ============ HERO ============ -->
   <header class="hero" id="top">
     <nav class="nav" aria-label="Primary">
-      <a class="nav__logo" href="#top" aria-label="Varun Devaraj, back to top">VD<span>.</span></a>
+      <a class="nav__logo" href="#top" aria-label="Varun Devaraj, back to top">~/varun<span>_</span></a>
       <div class="nav__links">
         <a href="#about">About</a>
         <a href="#work">Work</a>
@@ -31,33 +31,54 @@
       <span class="nav__status"><i aria-hidden="true"></i>Open to internships</span>
     </nav>
 
-    <h1 class="hero__title" aria-label="Hi, I'm Varun">
-      <span class="hero__line" aria-hidden="true">Hi, I'm</span>
-      <span class="hero__line" aria-hidden="true">Varun</span>
-    </h1>
+    <h1 class="sr-only">Varun Devaraj, AIML student at RV University building AI that runs on your machine</h1>
 
-    <div class="hero__row">
-      <p class="hero__tagline">
-        An AIML student building local-first AI tools &mdash; voice, vision &amp; language models that run on your machine
-        <span class="spark" aria-hidden="true">✦</span>
-      </p>
-
-      <!--
-        Orb: a real-time WebGL sphere lit from the pointer (script.js).
-        To show your own 3D render instead, set data-avatar-src="assets/avatar.png"
-        (transparent PNG/WebP works best).
-      -->
-      <div class="avatar" data-avatar data-avatar-src="">
-        <canvas class="orb" aria-hidden="true"></canvas>
-        <div class="orb-fallback" aria-hidden="true"></div>
+    <!-- Terminal: the full final state is written here so it reads without JS;
+         script.js replays it as a typing sequence, then leaves a live prompt. -->
+    <div class="term" data-term>
+      <div class="term__bar" aria-hidden="true">
+        <span class="term__dots"><i></i><i></i><i></i></span>
+        <span class="term__title">varun@rvu: ~/portfolio &mdash; zsh</span>
+        <span class="term__hint">click to skip</span>
       </div>
+      <div class="term__body" data-term-body data-lenis-prevent>
+        <div class="term__line"><span class="t-user">varun@rvu</span><span class="t-dim">:</span><span class="t-path">~</span><span class="t-dim">$</span> <span class="t-cmd">whoami</span></div>
+        <pre class="term__banner" aria-hidden="true">██    ██  █████  ██████  ██    ██ ███    ██
+██    ██ ██   ██ ██   ██ ██    ██ ████   ██
+██    ██ ███████ ██████  ██    ██ ██ ██  ██
+ ██  ██  ██   ██ ██   ██ ██    ██ ██  ██ ██
+  ████   ██   ██ ██   ██  ██████  ██   ████</pre>
+        <p class="term__out"><strong>Varun Devaraj</strong> <span class="t-dim">&middot;</span> AIML student @ RV University</p>
+        <p class="term__out t-soft">I build AI that runs on your machine &mdash; voice, vision &amp; language models. No cloud.</p>
 
-      <a class="pill" href="#contact">Contact me</a>
+        <div class="term__line"><span class="t-user">varun@rvu</span><span class="t-dim">:</span><span class="t-path">~</span><span class="t-dim">$</span> <span class="t-cmd">ls projects/</span></div>
+        <p class="term__out term__ls">
+          <a href="#work" data-project="0">nyxa/</a>
+          <a href="#work" data-project="1">skryver/</a>
+          <a href="#work" data-project="2">dhristi/</a>
+          <a href="#work" data-project="3">moodsync/</a>
+          <a href="#work" data-project="4">tiny-gpt/</a>
+          <a href="#work" data-project="5">coders-zone/</a>
+          <a href="#work" data-project="6">chill-focus/</a>
+          <a href="#work" data-project="7">star-ride/</a>
+          <a href="#work" data-project="8">gazu/</a>
+        </p>
+
+        <div class="term__line"><span class="t-user">varun@rvu</span><span class="t-dim">:</span><span class="t-path">~</span><span class="t-dim">$</span> <span class="t-cmd">cat now.txt</span></div>
+        <p class="term__out"><span class="t-user">&rarr;</span> SIH 2026 <span class="t-dim">&middot;</span> Team Dhristi (PS 26171)</p>
+        <p class="term__out"><span class="t-user">&rarr;</span> open to internships <span class="t-dim">&middot;</span> <a href="mailto:varundevaraj29@gmail.com">varundevaraj29@gmail.com</a></p>
+
+        <form class="term__line term__prompt" data-term-form autocomplete="off">
+          <span class="t-user">varun@rvu</span><span class="t-dim">:</span><span class="t-path">~</span><span class="t-dim">$</span>
+          <label class="sr-only" for="term-input">Terminal command</label>
+          <input id="term-input" class="term__input" type="text" spellcheck="false" autocapitalize="off" placeholder="type 'help'" enterkeyhint="go">
+        </form>
+      </div>
     </div>
 
     <div class="hero__foot" aria-hidden="true">
       <span>AIML &middot; RV University</span>
-      <span class="scroll-cue">Scroll <i></i></span>
+      <span class="scroll-cue">Scroll for work <i></i></span>
       <span>Portfolio &copy; 2026</span>
     </div>
   </header>
@@ -286,11 +307,15 @@
     <section class="section contact" id="contact">
       <p class="eyebrow">04 / Contact</p>
       <h2 class="contact__title" data-reveal>Got something <em class="grad">to build?</em></h2>
-      <p class="contact__copy" data-reveal>Open to internships, collaborations and hackathon teams. The fastest way to reach me is below.</p>
+      <p class="contact__copy" data-reveal>Open to internships, collaborations and hackathon teams. Email is the fastest way to reach me.</p>
+      <div class="contact__email" data-reveal>
+        <a href="mailto:varundevaraj29@gmail.com">varundevaraj29@gmail.com</a>
+        <button class="contact__copybtn" type="button" data-copy="varundevaraj29@gmail.com" aria-label="Copy email address">Copy</button>
+      </div>
       <div class="contact__links" data-reveal>
-        <a class="pill pill--lg" href="https://github.com/varundevarajrvu" target="_blank" rel="noopener">GitHub ↗</a>
-        <!-- Add more links here, e.g.:
-        <a class="pill pill--lg pill--ghost" href="mailto:you@example.com">Email ↗</a>
+        <a class="pill pill--lg" href="mailto:varundevaraj29@gmail.com">Email me ↗</a>
+        <a class="pill pill--lg pill--ghost" href="https://github.com/varundevarajrvu" target="_blank" rel="noopener">GitHub ↗</a>
+        <!-- LinkedIn: uncomment and paste your profile URL
         <a class="pill pill--lg pill--ghost" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn ↗</a>
         -->
       </div>
@@ -304,7 +329,6 @@
   </footer>
 
   <script src="assets/vendor/lenis.min.js" defer></script>
-  <script src="orb.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
