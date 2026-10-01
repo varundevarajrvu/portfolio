@@ -127,9 +127,7 @@ ul, ol { padding: 0; list-style: none; }
 .hero__title span { display: inline-block; }
 
 .js .hero__title {
-  transform: scale(calc(1 + var(--hp, 0) * var(--hp, 0) * 3.5));
   transform-origin: 50% 60%;
-  opacity: calc(1 - var(--hp, 0) * 1.25);
   will-change: transform, opacity;
 }
 
@@ -165,8 +163,7 @@ ul, ol { padding: 0; list-style: none; }
 .avatar {
   --av: clamp(240px, min(34vw, 62vh), 560px);
   position: relative;
-  filter: blur(calc(var(--hp, 0) * 14px));
-  opacity: calc(1 - var(--hp, 0) * 1.1);
+  will-change: transform, opacity;
   z-index: 2;
   width: var(--av);
   margin-top: calc(var(--av) * -0.27);
@@ -179,7 +176,16 @@ ul, ol { padding: 0; list-style: none; }
   height: auto;
   transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
   transition: transform 0.4s var(--ease);
-  filter: drop-shadow(0 30px 60px rgba(90, 40, 220, 0.35));
+}
+
+.avatar::before {
+  content: "";
+  position: absolute;
+  inset: 8% 8% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(110, 50, 230, 0.45), transparent);
+  transform: translateY(8%) scale(1.15);
+  z-index: -1;
 }
 
 .avatar__head {
@@ -577,8 +583,7 @@ ul, ol { padding: 0; list-style: none; }
 }
 
 .showcase.is-on .project__proof {
-  backdrop-filter: blur(8px);
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.45);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -592,7 +597,17 @@ ul, ol { padding: 0; list-style: none; }
 
 .showcase.is-on .chips li {
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
+}
+
+/* promote only what is animating right now */
+.project.is-leaving .project__title,
+.project.is-leaving .project__shot,
+.project.is-leaving .project__bg,
+.project.is-animating .project__title,
+.project.is-animating .project__shot,
+.project.is-animating .project__bg,
+.project.is-animating .project__body {
+  will-change: transform, opacity;
 }
 
 /* backgrounds */
@@ -803,28 +818,28 @@ ul, ol { padding: 0; list-style: none; }
 }
 
 @keyframes sc-zoom-through {
-  0% { transform: scale(1); opacity: 1; filter: blur(0); }
+  0% { transform: scale(1); opacity: 1; }
   70% { opacity: 1; }
-  100% { transform: scale(8); opacity: 0; filter: blur(6px); }
+  100% { transform: scale(8); opacity: 0; }
 }
 
 @keyframes sc-zoom-back {
-  0% { transform: scale(8); opacity: 0; filter: blur(6px); }
+  0% { transform: scale(8); opacity: 0; }
   35% { opacity: 1; }
-  100% { transform: scale(1); opacity: 1; filter: blur(0); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes sc-shot-out {
-  to { transform: scale(1.3) translateX(8%); opacity: 0; filter: blur(12px); }
+  to { transform: scale(1.3) translateX(8%); opacity: 0; }
 }
 
 @keyframes sc-shot-in {
-  0% { transform: translateX(10%) scale(0.95); opacity: 0; filter: blur(16px); }
-  100% { transform: none; opacity: 1; filter: blur(0); }
+  0% { transform: translateX(10%) scale(0.95); opacity: 0; }
+  100% { transform: none; opacity: 1; }
 }
 
 @keyframes sc-fade-out {
-  to { opacity: 0; transform: translateY(-14px); filter: blur(6px); }
+  to { opacity: 0; transform: translateY(-14px); }
 }
 
 @keyframes sc-blur-out {
@@ -832,23 +847,23 @@ ul, ol { padding: 0; list-style: none; }
 }
 
 @keyframes sc-bg-out {
-  to { filter: blur(14px) brightness(0.15); transform: scale(1.08); }
+  to { opacity: 0.12; transform: scale(1.08); }
 }
 
 @keyframes sc-bg-in {
-  0% { filter: blur(24px) brightness(0.2); transform: scale(1.14); opacity: 0; }
-  30% { opacity: 1; }
-  100% { filter: blur(0) brightness(1); transform: scale(1); opacity: 1; }
+  0% { opacity: 0; transform: scale(1.14); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
+/* the headline keeps a real focus-pull: it is the signature of the transition */
 @keyframes sc-focus-in {
-  0% { filter: blur(18px); opacity: 0; transform: scale(1.05); }
+  0% { filter: blur(12px); opacity: 0; transform: scale(1.05); }
   100% { filter: blur(0); opacity: 1; transform: scale(1); }
 }
 
 @keyframes sc-rise {
-  0% { opacity: 0; transform: translateY(18px); filter: blur(6px); }
-  100% { opacity: 1; transform: none; filter: blur(0); }
+  0% { opacity: 0; transform: translateY(18px); }
+  100% { opacity: 1; transform: none; }
 }
 
 /* ============ Stack ============ */
@@ -920,6 +935,84 @@ ul, ol { padding: 0; list-style: none; }
 }
 
 .footer a:hover { color: var(--ink); }
+
+/* ============ Smooth scroll (Lenis) ============ */
+html.lenis,
+html.lenis body { height: auto; }
+
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+.lenis.lenis-stopped { overflow: clip; }
+
+/* ============ Custom cursor ============ */
+html.has-cursor,
+html.has-cursor * { cursor: none !important; }
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 999px;
+  background: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    width 0.35s var(--ease),
+    height 0.35s var(--ease),
+    margin 0.35s var(--ease),
+    opacity 0.3s;
+}
+
+.cursor.is-ready { opacity: 1; }
+
+.cursor.is-hover {
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1.5px #fff;
+  mix-blend-mode: normal;
+}
+
+/* morphs into a scroll pill while the page moves, like a mouse wheel icon */
+.cursor.is-scrolling:not(.is-hover) {
+  width: 12px;
+  height: 32px;
+  margin: -16px 0 0 -6px;
+}
+
+.cursor.is-down { width: 10px; height: 10px; margin: -5px 0 0 -5px; }
+
+.cursor.is-hidden { opacity: 0; }
+
+/* ============ Light pools that trail the pointer ============ */
+.light {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 900px;
+  height: 900px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero > .light {
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(170, 110, 255, 0.16), rgba(255, 79, 154, 0.05) 55%, transparent);
+}
+
+.showcase__stage > .light {
+  z-index: 3;
+  width: 1100px;
+  height: 1100px;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.22), transparent);
+  mix-blend-mode: soft-light;
+}
 
 /* ============ Reveal on scroll (only when JS is running) ============ */
 .js [data-reveal] {

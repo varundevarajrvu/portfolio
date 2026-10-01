@@ -29,6 +29,7 @@ The site is served at `https://varundevarajrvu.github.io/portfolio/`. `.nojekyll
   - With a screenshot: add `data-bg="assets/work/name.webp"` (1600px wide) plus a heavily blurred `assets/work/name-amb.webp` for the ambient background, e.g.
     `ffmpeg -i name.webp -vf "scale=480:-2,gblur=sigma=22,eq=saturation=1.35" name-amb.webp`.
   - Without one: add `data-art` and a `<p class="project__art" aria-hidden="true">…</p>` whose text becomes the ghosted background.
+  - The Coder's Zone and tiny-gpt cards are reconstructions (no live deployment to capture): Coder's Zone uses the app's real design tokens and FizzBuzz problem data, tiny-gpt shows the sample output from its README. Swap in real screenshots any time.
 - **Colours** — the gradient and palette live in the `:root` tokens at the top of `styles.css`.
 
 ## Motion
@@ -36,6 +37,9 @@ The site is served at `https://varundevarajrvu.github.io/portfolio/`. `.nojekyll
 - **Work showcase** — the project list becomes a pinned, full-screen slideshow driven by scroll. Moving forward, the outgoing headline zooms through the camera while the next slide pulls into focus from a blur; scrolling back plays the reverse.
 - **Hero** — the headline zooms through and the avatar defocuses as you scroll away.
 - **Reveals** — sections pull into focus as they enter the viewport.
+- **Smooth scroll** — inertial scrolling via [Lenis](https://github.com/darkroomengineering/lenis) (MIT, vendored in `assets/vendor/`).
+- **Cursor** — on mouse/trackpad devices a trailing dot replaces the pointer: it inverts what it passes over, opens into a ring over links and stretches into a scroll pill while the page moves.
+- **Lighting** — the avatar is lit from the pointer (key light, specular highlight and rim light all track it), and soft light pools follow the cursor through the hero and the work slides.
 
 ## Accessibility & motion
 
